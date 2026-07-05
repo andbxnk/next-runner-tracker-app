@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     if (!error) {
       // โค้ดเดิมอาจจะเป็นแบบนี้: return NextResponse.redirect(`${origin}${next}`);
       // แนะนำให้เขียนแบบล็อก Path ตรงตัวไปเลย ปลอดภัยสุดครับ:
-      return NextResponse.redirect(new URL("/dashboard?login=google", request.url));
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 

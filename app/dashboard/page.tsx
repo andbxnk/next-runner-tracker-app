@@ -4,7 +4,6 @@ import { th } from "date-fns/locale";
 import Link from "next/link";
 import { Route, Clock, Trophy, Plus, Calendar, ArrowRight, MapPin, Activity } from "lucide-react";
 import Image from "next/image";
-import GoogleWelcomeAlert from "./GoogleWelcomeAlert"; // 👈 1. อิมพอร์ตตัวดักแจ้งเตือนเข้ามา
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -17,7 +16,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-12 animate-luxury">
-      <GoogleWelcomeAlert />
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
