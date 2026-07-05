@@ -1,19 +1,23 @@
 "use client";
 
 import { useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation"; // 👈 นำเข้าเครื่องมือตรวจ URL
 import Swal from "sweetalert2";
 
 export default function GoogleWelcomeAlert() {
-  useEffect(() => {
-    // 🌟 ดักเช็คใน sessionStorage ว่ารอบนี้เคยเปิดทักทายไปหรือยัง
-    const hasWelcomed = sessionStorage.getItem("google_success_shown");
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-    if (!hasWelcomed) {
+  useEffect(() => {
+    // 🌟 เปลี่ยนมาเช็คว่าบน URL มีคำว่า ?login=google หรือไม่
+    const isGoogleLogin = searchParams.get("login") === "google";
+
+    if (isGoogleLogin) {
       Swal.fire({
         title: "เชื่อมต่อสำเร็จ!",
         text: "ยินดีต้อนรับเข้าสู่ระบบด้วยบัญชี Google",
         icon: "success",
-        timer: 2500, // โชว์ค้างไว้ 2.5 วินาที
+        timer: 2500,
         timerProgressBar: true,
         showConfirmButton: false,
         customClass: {
@@ -21,10 +25,14 @@ export default function GoogleWelcomeAlert() {
         }
       });
 
-      // บันทึกไว้ว่าแสดงผลแล้ว กดรีเฟรชหน้าจอหลังจากนี้จะไม่ขึ้นซ้ำซ้อน
-      sessionStorage.setItem("google_success_shown", "true");
+      // 🌟 โชว์เสร็จแล้ว สั่งลบ ?login=google ออกจาก URL บนแถบเว็บบนเบราว์เซอร์ 
+      // เพื่อเวลาผู้ใช้กดรีเฟรชหน้าจอหลังจากนี้ ป๊อปอัพจะได้ไม่เด้งขึ้นมาซ้ำซ้อนให้รำคาญตา
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("login");
+      const newQuery = params.toString() ? `?${params.toString()}` : "";
+      router.replace(`/dashboard${newQuery}`);
     }
-  }, []);
+  }, [searchParams, router]);
 
-  return null; // คอมโพเนนต์นี้ทำหน้าที่รันสคริปต์อย่างเดียว ไม่ต้องพ่นหน้าตา HTML ออกมา
+  return null;
 }
